@@ -57,7 +57,7 @@ with ui.layout_columns(col_widths=(5, 10)):
 
     @render.data_frame
     def render_penguins_table():
-        return penguins_df
+        return render. DataTable(filtered_data())
 
 # Creates a DataGrid showing all data
 
@@ -70,7 +70,7 @@ with ui.layout_columns(col_widths=(5, 10)):
 
 @render.data_frame
 def penguins_data():
-    return render.DataGrid(penguins_df, row_selection_mode="multiple") 
+    return render. DataTable(filtered_data()) 
 
 # Creates a Plotly Histogram showing all species
 
@@ -80,7 +80,7 @@ with ui.card(full_screen=True):
     @render_plotly
     def plotly_histogram():
         return px.histogram(
-            penguins_df, x=input.selected_attribute(), nbins=input.plotly_bin_count()
+            filtered_data(), x=input.selected_attribute(), nbins=input.plotly_bin_count()
         )
 
 # Creates a Seaborn Histogram showing all species
@@ -90,7 +90,7 @@ with ui.card(full_screen=True):
 
     @render.plot(alt="Seaborn Histogram")
     def seaborn_histogram():
-        histplot = sns.histplot(data=penguins_df, x="body_mass_g", bins=input.seaborn_bin_count())
+        histplot = sns.histplot(data=filtered_data(), x="body_mass_g", bins=input.seaborn_bin_count())
         histplot.set_title("Palmer penguins")
         histplot.set_xlabel("Mass")
         histplot.set_ylabel("Count")
@@ -103,7 +103,7 @@ with ui.card(full_screen=True):
 
     @render_plotly
     def plotly_scatterplot():
-        return px.scatter(penguins_df,
+        return px.scatter(filtered_data(),
             x="bill_length_mm",
             y="body_mass_g",
             color="species",
@@ -114,40 +114,6 @@ with ui.card(full_screen=True):
             },
             size_max=10,)
 
-
-# Additional Python Notes
-# ------------------------
-
-# Capitalization matters in Python. Python is case-sensitive: min and Min are different.
-# Spelling matters in Python. You must match the spelling of functions and variables exactly.
-# Indentation matters in Python. Indentation is used to define code blocks and must be consistent.
-
-# Functions
-# ---------
-# Functions are used to group code together and make it more readable and reusable.
-# We define custom functions that can be called later in the code.
-# Functions are blocks of logic that can take inputs, perform work, and return outputs.
-
-# Defining Functions
-# ------------------
-# Define a function using the def keyword, followed by the function name, parentheses, and a colon. 
-# The function name should describe what the function does.
-# In the parentheses, specify the inputs needed as arguments the function takes.
-
-# For example:
-#    The function filtered_data() takes no arguments.
-#    The function between(min, max) takes two arguments, a minimum and maximum value.
-#    Arguments can be positional or keyword arguments, labeled with a parameter name.
-
-# The function body is indented (consistently!) after the colon. 
-# Use the return keyword to return a value from a function.
-
-# Calling Functions
-# -----------------
-# Call a function by using its name followed by parentheses and any required arguments.
-    
-# Decorators
-# ----------
-# Use the @ symbol to decorate a function with a decorator.
-# Decorators a concise way of calling a function on a function.
-# We don't typically write decorators, but we often use them.
+@reactive.calc
+def filtered_data():
+    return penguins_df
