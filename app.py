@@ -41,6 +41,14 @@ with ui.sidebar(open="open"):
         ["Adelie", "Gentoo", "Chinstrap"],
         selected=["Adelie"],
         inline=True,)
+    
+    ui.input_checkbox_group(
+        "selected_island_list",
+        "Islands",
+         penguins_df["island"].unique().tolist(),
+        selected=penguins_df["island"].unique().tolist(),
+        inline=True,)
+
 
       # Adds a horizontal rule to the sidebar
     ui.hr()
@@ -116,4 +124,6 @@ with ui.layout_columns():
 
 @reactive.calc
 def filtered_data():
-    return penguins_df[penguins_df["species"].isin(input.selected_species_list())]
+    return penguins_df[(penguins_df["species"].isin(input.selected_species_list())) &
+        (penguins_df["island"].isin(input.selected_island_list()))]
+
